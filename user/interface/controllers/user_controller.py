@@ -2,6 +2,9 @@ from fastapi import APIRouter
 '''
 회원 가입 라우터로 전달된 외부의 요청에 포함돼 있는 본문을 검사하는 기능을 구현합니다'''
 from pydantic import BaseModel
+'''
+유저 생성 유스 케이스 호출'''
+from user.application.user_service import UserService
 
 router = APIRouter(prefix='/users') # FastAPI가 제공하는 APIRouter 객체를 생성합니다
 
@@ -12,4 +15,10 @@ class CreateUserBody(BaseModel): # 파이단틱의 BaseModel을 상속받아 파
 
 @router.post('', status_code=201) # post 메서드를 이용해 /users 라는 경로로 POST 요청을 받을 수 있습니다
 def create_user(user: CreateUserBody): # 요청 매개변수나 본문을 라우터에 전달합니다
-    return user # 전달받은 파이단틱 모델을 다시 응답으로 내보냅니다
+    user_service = UserService()
+    created_user = user_service.create_user(
+        name=user.name,
+        email=user.email,
+        password=user.password
+    )
+    return created_user
