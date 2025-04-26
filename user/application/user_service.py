@@ -17,7 +17,8 @@ class UserService:
     def __init__(self):
         self.user_repo: IUserRepository = UserRepository() # 의존성 역전
         self.ulid = ULID()
-        
+        self.crypto = Crypto() # GPT 추가
+
     def create_user(self, name: str, email: str, password: str):
         _user = None
         
@@ -38,6 +39,7 @@ class UserService:
             password=self.crypto.encrypt(password),
             created_at=now,
             updated_at=now,
+            memo='',
         )
         self.user_repo.save(user)
         

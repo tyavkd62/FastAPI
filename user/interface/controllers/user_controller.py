@@ -13,8 +13,8 @@ class CreateUserBody(BaseModel): # 파이단틱의 BaseModel을 상속받아 파
     email: str
     password: str
 
-@router.post('', status_code=201) # post 메서드를 이용해 /users 라는 경로로 POST 요청을 받을 수 있습니다
-def create_user(user: CreateUserBody, user_service: UserService): # 요청 매개변수나 본문을 라우터에 전달합니다
+@router.post('', status_code=201, response_model=None) # post 메서드를 이용해 /users 라는 경로로 POST 요청을 받을 수 있습니다
+def create_user(user: CreateUserBody): # 요청 매개변수나 본문을 라우터에 전달합니다
     user_service = UserService()
     created_user = user_service.create_user(
         name=user.name,

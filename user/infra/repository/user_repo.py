@@ -2,6 +2,8 @@ from database import SessionLocal
 from user.domain.repository.user_repo import IUserRepository
 from user.domain.user import User as UserVO
 from user.infra.db_models.user import User
+from fastapi import HTTPException
+from utils.db_utils import row_to_dict
 
 class UserRepository(IUserRepository):
     def save(self, user: UserVO):
@@ -21,6 +23,13 @@ class UserRepository(IUserRepository):
                 db.commit()
             finally:
                 db.close()
+
+    # 이메일로 유저를 조회하는 기능을 구현합니다:        
+    def find_by_email(self, email: str) -> UserVO:
+        with SessionLocal() as db:
+            user = db.qeury(User).filter(User.email == email).first()
             
-    def find_by_email(self, email: str) -> User:
-        pass
+        if not user:
+            raise HTTPException(status_code=422)
+        
+        return UserVO(**row_to_dict(user))
