@@ -11,7 +11,7 @@ from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
-app.container = Container()
+app.container = Container() # 앱을 구동할 때 앞에서 작성한 컨테이너 클래스 등록
 app.include_router(user_routers)
 
 @app.exception_handler(RequestValidationError)

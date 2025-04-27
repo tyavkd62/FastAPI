@@ -27,7 +27,13 @@ class UserService:
         self.ulid = ULID()
         self.crypto = Crypto() # GPT 추가
 
-    def create_user(self, name: str, email: str, password: str):
+    def create_user(
+        self,
+        name: str,
+        email: str,
+        password: str,
+        memo: str | None = None
+    ):
         _user = None
         
         try:
@@ -47,7 +53,7 @@ class UserService:
             password=self.crypto.encrypt(password),
             created_at=now,
             updated_at=now,
-            memo='',
+            memo=memo,
         )
         self.user_repo.save(user)
         
