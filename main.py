@@ -1,3 +1,4 @@
+from containers import Container
 from fastapi import FastAPI
 import uvicorn
 '''
@@ -10,6 +11,7 @@ from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
+app.container = Container()
 app.include_router(user_routers)
 
 @app.exception_handler(RequestValidationError)
