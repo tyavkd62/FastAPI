@@ -1,6 +1,7 @@
 from containers import Container
 from fastapi import FastAPI
 import uvicorn
+import user.interface.controllers.user_controller
 '''
 FastAPI에서 라우터를 사용하도록 설정합니다'''
 from user.interface.controllers.user_controller import router as user_routers
@@ -9,6 +10,11 @@ from user.interface.controllers.user_controller import router as user_routers
 from fastapi.exceptions import RequestValidationError
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
+
+container = Container()
+container.wire(
+    modules=[user.interface.controllers.user_controller]
+)
 
 app = FastAPI()
 app.container = Container() # 앱을 구동할 때 앞에서 작성한 컨테이너 클래스 등록

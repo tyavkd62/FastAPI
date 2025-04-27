@@ -28,9 +28,34 @@ class UserRepository(IUserRepository):
     # 이메일로 유저를 조회하는 기능을 구현합니다:        
     def find_by_email(self, email: str) -> UserVO:
         with SessionLocal() as db:
-            user = db.qeury(User).filter(User.email == email).first()
+            user = db.query(User).filter(User.email == email).first()
             
         if not user:
             raise HTTPException(status_code=422)
         
         return UserVO(**row_to_dict(user))
+    
+    # 유저 ID로 해당 유저를 검색하고,
+    def find_by_id(self, id: str):
+        with SessionLocal() as db:
+            user = db.query(User).filter(User.id == id).first()
+            
+        if not user:
+            raise HTTPException(status_code=422)
+        
+        return UserVO(**row_to_dict(user))
+    
+    # 유저 정보를 데이터베이스에 업데이트하는 함술를 구현합니다:
+    def update(self, user_vo: UserVO):
+        with SessionLocal() as db:
+            user = db.query(User).filter(User.id == user_vo.id).first()
+            
+            if not user:
+                raise HTTPException(status_code=422)
+            
+            user.name = user_vo.name
+            user.password = user_vo.password
+            db.add(user)
+            db.commit()
+        
+        return user

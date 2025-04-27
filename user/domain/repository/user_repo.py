@@ -16,3 +16,7 @@ class IUserRepository(metaclass=ABCMeta):
         이메일로 유저를 검색하고,
         검색한 유저가 없을 경우 422 에러를 발생시킵니다.'''
         raise NotImplementedError
+    
+    @abstractmethod
+    def update(self, user: User):
+        raise NotImplementedError
