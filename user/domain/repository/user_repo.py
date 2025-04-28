@@ -25,3 +25,8 @@ class IUserRepository(metaclass=ABCMeta):
     @abstractmethod
     def get_users(self, page: int, items_per_page: int) -> tuple[int, list[User]]:
         raise NotImplementedError
+    
+    # 유저 삭제 기능 구현
+    @abstractmethod
+    def delete(self, id: str):
+        raise NotImplementedError

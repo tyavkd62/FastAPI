@@ -66,3 +66,11 @@ def get_users(
         "page": page,
         "users": users,
     }
+    
+@router.delete("", status_code=204)
+@inject
+def delete_user(
+    user_id: str,
+    user_service: UserService = Depends(Provide[Container.user_service]),
+):
+    user_service.delete_user(user_id)
