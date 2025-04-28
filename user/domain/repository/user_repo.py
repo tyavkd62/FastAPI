@@ -20,3 +20,8 @@ class IUserRepository(metaclass=ABCMeta):
     @abstractmethod
     def update(self, user: User):
         raise NotImplementedError
+    
+    # 유저 목록을 조회하는 인터페이스 생성
+    @abstractmethod
+    def get_users(self) -> list[User]:
+        raise NotImplementedError
