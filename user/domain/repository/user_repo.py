@@ -21,7 +21,7 @@ class IUserRepository(metaclass=ABCMeta):
     def update(self, user: User):
         raise NotImplementedError
     
-    # 유저 목록을 조회하는 인터페이스 생성
+    # 유저 목록 조회 기능에 페이징 적용
     @abstractmethod
-    def get_users(self) -> list[User]:
+    def get_users(self, page: int, items_per_page: int) -> tuple[int, list[User]]:
         raise NotImplementedError
