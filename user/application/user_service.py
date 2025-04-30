@@ -1,5 +1,5 @@
 from fastapi import status
-from common.auth import create_access_token
+from common.auth import Role, create_access_token
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import Depends
@@ -94,7 +94,8 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
         
         access_token = create_access_token(
-            payload={'user_id': user.id}
+            payload={'user_id': user.id},
+            role=Role.USER,
         )
         
         return access_token
