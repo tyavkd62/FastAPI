@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from dependency_injector.wiring import inject, Provide
 from containers import Container
 
@@ -19,13 +21,26 @@ class CreateUserBody(BaseModel): # 파이단틱의 BaseModel을 상속받아 파
     email: EmailStr = Field(max_length=64)
     password: str = Field(min_length=8, max_length=32)
 
-@router.post('', status_code=201, response_model=None) # post 메서드를 이용해 /users 라는 경로로 POST 요청을 받을 수 있습니다
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    created_at: datetime
+    updated_at: datetime
+    
+class GetUserResponse(BaseModel):
+    total_count: int
+    page: int
+    users: list[UserResponse]
+    
+    
+@router.post('', status_code=201) # post 메서드를 이용해 /users 라는 경로로 POST 요청을 받을 수 있습니다
 @inject
 def create_user(
     user: CreateUserBody, # 요청 매개변수나 본문을 라우터에 전달합니다
     user_service: UserService = Depends(Provide[Container.user_service]),
     # user_service: UserService = Depends(Provide["user_service"]),
-):
+) -> UserResponse:
     created_user = user_service.create_user(
         name=user.name,
         email=user.email,
@@ -52,13 +67,14 @@ def update_user(
     
     return user
 
+
 @router.get('')
 @inject
 def get_users(
     page: int = 1,
     items_per_page: int = 10,
     user_service: UserService = Depends(Provide[Container.user_service]),
-):
+) -> GetUserResponse:
     total_count, users = user_service.get_users(page, items_per_page)
     
     return {
@@ -66,7 +82,8 @@ def get_users(
         "page": page,
         "users": users,
     }
-    
+
+
 @router.delete("", status_code=204)
 @inject
 def delete_user(
