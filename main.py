@@ -1,3 +1,5 @@
+from example.ch06_02.sync_ex import router as sync_ex_routers
+
 from containers import Container
 from fastapi import FastAPI
 import uvicorn
@@ -19,6 +21,7 @@ container.wire(
 app = FastAPI()
 app.container = Container() # 앱을 구동할 때 앞에서 작성한 컨테이너 클래스 등록
 app.include_router(user_routers)
+app.include_router(sync_ex_routers)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
