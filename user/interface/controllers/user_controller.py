@@ -1,3 +1,5 @@
+from fastapi.security import OAuth2PasswordRequestForm
+
 from datetime import datetime
 
 from dependency_injector.wiring import inject, Provide
@@ -91,3 +93,17 @@ def delete_user(
     user_service: UserService = Depends(Provide[Container.user_service]),
 ):
     user_service.delete_user(user_id)
+    
+
+@router.post('/login')
+@inject
+def login(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    user_service: UserService = Depends(Provide[Container.user_service]),
+):
+    access_token = user_service.login(
+        email=form_data.username,
+        password=form_data.password,
+    )
+    
+    return {'access_token': access_token, 'token_type': 'bearer'}
