@@ -1,7 +1,5 @@
-
-from datetime import datetime
 import time
-
+from datetime import datetime
 from fastapi import APIRouter
 
 router = APIRouter(prefix='/sync-test')
