@@ -7,4 +7,5 @@
 
 #### **MySQL 실행**
 
->mysql -u root -h 127.0.0.1 -p
+>mysql -u root -h 127.0.0.1 -p<br>
+>USE fastapi_ca
