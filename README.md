@@ -9,3 +9,9 @@
 
 >mysql -u root -h 127.0.0.1 -p<br>
 >USE fastapi_ca
+
+
+#### **구글 앱 비밀번호**
+
+>FastAPI-CA<br>
+>tmdf nowj jkew dhji
