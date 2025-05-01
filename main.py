@@ -8,6 +8,7 @@ import user.interface.controllers.user_controller
 '''
 FastAPI에서 라우터를 사용하도록 설정합니다'''
 from user.interface.controllers.user_controller import router as user_routers
+from note.interface.controllers.note_controller import router as note_routers
 '''
 유효성 검사 오류의 상태 코드를 400 Bad Request로 변경하기'''
 from fastapi.exceptions import RequestValidationError
@@ -24,6 +25,7 @@ app.container = Container() # 앱을 구동할 때 앞에서 작성한 컨테이
 app.include_router(user_routers)
 app.include_router(sync_ex_routers)
 app.include_router(async_ex_routers)
+app.include_router(note_routers)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
