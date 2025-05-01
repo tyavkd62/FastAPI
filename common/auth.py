@@ -1,7 +1,14 @@
+from dataclasses import dataclass
+from fastapi.security import OAuth2AuthorizationCodeBearer
+from typing import Annotated
+
 from enum import StrEnum
 from datetime import datetime, timedelta
-from fastapi import HTTPException, status
+from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(tokenUrl='/users/login')
+
 
 SECRET_KEY = "THIS_IS_SUPER_SECRET_KEY"
 ALGORITHM = 'HS256'
@@ -26,9 +33,24 @@ def create_access_token(
     
     return encoded_jwt
 
-def decodes_access_token(token: str):
+def decode_access_token(token: str):
     try:
         return jwt.decode(token, SECRET_KEY, algorithm=[ALGORITHM])
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     
+@dataclass
+class CurrentUser:
+    id: str
+    role: Role
+    
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    payload = decode_access_token(token)
+    
+    user_id = payload.get('user_id')
+    role = payload.get('role')
+    
+    if not user_id or not role or role != Role.USER:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+    
+    return CurrentUser(user_id, Role(role))

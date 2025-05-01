@@ -1,3 +1,4 @@
+from common.auth import CurrentUser, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 
 from datetime import datetime
@@ -54,15 +55,21 @@ class UpdateUser(BaseModel):
     name: str | None = Field(min_length=2, max_length=32, default=None)
     password: str | None = Field(min_length=8, max_length=32, default=None)
     
-@router.put("/{user_id}")
+class UpdateUserBody(BaseModel):
+    name: str | None = Field(min_length=2, max_length=32, default=None)
+    password: str | None = Field(min_length=8, max_length=32, default=None)
+    
+@router.put("", response_model=UserResponse)
 @inject
 def update_user(
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
+    body: UpdateUserBody,
     user_id: str,
     user: UpdateUser,
     user_service: UserService = Depends(Provide[Container.user_service]),
 ):
     user = user_service.update_user(
-        user_id=user_id,
+        user_id=current_user.id,
         name=user.name,
         password=user.password,
     )
