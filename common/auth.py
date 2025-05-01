@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from fastapi.security import OAuth2AuthorizationCodeBearer
+from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 
 from enum import StrEnum
@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 
-oauth2_scheme = OAuth2AuthorizationCodeBearer(tokenUrl='/users/login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/users/login')
 
 
 SECRET_KEY = "THIS_IS_SUPER_SECRET_KEY"
