@@ -1,3 +1,4 @@
+from common.auth import get_admin_user
 from common.auth import CurrentUser, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -76,6 +77,7 @@ def update_user(
 def get_users(
     page: int = 1,
     items_per_page: int = 10,
+    current_user: CurrentUser = Depends(get_admin_user),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> GetUserResponse:
     total_count, users = user_service.get_users(page, items_per_page)
