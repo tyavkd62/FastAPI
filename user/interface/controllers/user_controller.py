@@ -51,10 +51,6 @@ def create_user(
     )
     return created_user
 
-class UpdateUser(BaseModel):
-    name: str | None = Field(min_length=2, max_length=32, default=None)
-    password: str | None = Field(min_length=8, max_length=32, default=None)
-    
 class UpdateUserBody(BaseModel):
     name: str | None = Field(min_length=2, max_length=32, default=None)
     password: str | None = Field(min_length=8, max_length=32, default=None)
@@ -64,14 +60,12 @@ class UpdateUserBody(BaseModel):
 def update_user(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
     body: UpdateUserBody,
-    user_id: str,
-    user: UpdateUser,
     user_service: UserService = Depends(Provide[Container.user_service]),
 ):
     user = user_service.update_user(
         user_id=current_user.id,
-        name=user.name,
-        password=user.password,
+        name=body.name,
+        password=body.password,
     )
     
     return user
@@ -96,10 +90,10 @@ def get_users(
 @router.delete("", status_code=204)
 @inject
 def delete_user(
-    user_id: str,
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
     user_service: UserService = Depends(Provide[Container.user_service]),
 ):
-    user_service.delete_user(user_id)
+    user_service.delete_user(current_user)
     
 
 @router.post('/login')
