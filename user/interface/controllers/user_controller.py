@@ -10,7 +10,7 @@ from containers import Container
 '''
 의존성 주입'''
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import BackgroundTasks, APIRouter, Depends
 '''
 회원 가입 라우터로 전달된 외부의 요청에 포함돼 있는 본문을 검사하는 기능을 구현합니다'''
 from pydantic import BaseModel, EmailStr, Field
@@ -42,10 +42,12 @@ class GetUserResponse(BaseModel):
 @inject
 def create_user(
     user: CreateUserBody, # 요청 매개변수나 본문을 라우터에 전달합니다
+    background_tasks: BackgroundTasks,
     user_service: UserService = Depends(Provide[Container.user_service]),
     # user_service: UserService = Depends(Provide["user_service"]),
 ) -> UserResponse:
     created_user = user_service.create_user(
+        background_tasks=background_tasks,
         name=user.name,
         email=user.email,
         password=user.password

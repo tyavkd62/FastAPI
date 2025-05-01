@@ -1,5 +1,6 @@
-from fastapi import status
+from fastapi import status, BackgroundTasks
 from common.auth import Role, create_access_token
+from user.application.email_service import EmailService
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import Depends
@@ -24,13 +25,16 @@ class UserService:
     def __init__(
         self,
         user_repo: IUserRepository,
+        email_service: EmailService,
     ):
         self.user_repo = user_repo # 의존성 주입
         self.ulid = ULID()
         self.crypto = Crypto() # GPT 추가
+        self.email_service = email_service
 
     def create_user(
         self,
+        background_tasks: BackgroundTasks,
         name: str,
         email: str,
         password: str,
@@ -58,7 +62,9 @@ class UserService:
             memo=memo,
         )
         self.user_repo.save(user)
-        
+        background_tasks.add_task(
+            self.email_service.send_email, user.email
+        )
         return user
     
     def update_user(
