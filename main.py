@@ -1,3 +1,4 @@
+from example.ch11_01.middleware import create_sample_middleware
 from example.ch06_02.sync_ex import router as sync_ex_routers
 from example.ch06_02.async_ex import router as async_ex_routers
 
@@ -26,6 +27,7 @@ app.include_router(user_routers)
 app.include_router(sync_ex_routers)
 app.include_router(async_ex_routers)
 app.include_router(note_routers)
+create_sample_middleware(app)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
