@@ -1,3 +1,4 @@
+import pymysql
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -12,7 +13,11 @@ class Settings(BaseSettings):
     database_password: str
     jwt_secret: str
     email_password: str
+    celery_broker_url: str
+    celery_backend_url: str
     
 @lru_cache
 def get_settings():
     return Settings()
+
+pymysql.install_as_MySQLdb()

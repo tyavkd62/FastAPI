@@ -1,3 +1,5 @@
+from user.application.send_welcome_email_task import SendWelcomeEmailTask
+
 from fastapi import status, BackgroundTasks
 from common.auth import Role, create_access_token
 from user.application.email_service import EmailService
@@ -34,7 +36,7 @@ class UserService:
 
     def create_user(
         self,
-        background_tasks: BackgroundTasks,
+        # background_tasks: BackgroundTasks,
         name: str,
         email: str,
         password: str,
@@ -62,9 +64,11 @@ class UserService:
             memo=memo,
         )
         self.user_repo.save(user)
-        background_tasks.add_task(
-            self.email_service.send_email, user.email
-        )
+        # background_tasks.add_task(
+        #     self.email_service.send_email, user.email
+        # )
+        SendWelcomeEmailTask().run(user.email)
+        
         return user
     
     def update_user(

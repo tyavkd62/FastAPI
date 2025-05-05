@@ -42,12 +42,12 @@ class GetUserResponse(BaseModel):
 @inject
 def create_user(
     user: CreateUserBody, # 요청 매개변수나 본문을 라우터에 전달합니다
-    background_tasks: BackgroundTasks,
+    # background_tasks: BackgroundTasks,
     user_service: UserService = Depends(Provide[Container.user_service]),
     # user_service: UserService = Depends(Provide["user_service"]),
 ) -> UserResponse:
     created_user = user_service.create_user(
-        background_tasks=background_tasks,
+        # background_tasks=background_tasks,
         name=user.name,
         email=user.email,
         password=user.password
