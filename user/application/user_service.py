@@ -28,11 +28,15 @@ class UserService:
         self,
         user_repo: IUserRepository,
         email_service: EmailService,
+        ulid: ULID,
+        crypto: Crypto,
+        send_welcom_email_task: SendWelcomeEmailTask,
     ):
         self.user_repo = user_repo # 의존성 주입
-        self.ulid = ULID()
-        self.crypto = Crypto() # GPT 추가
+        self.ulid = ulid
+        self.crypto = crypto # GPT 추가
         self.email_service = email_service
+        self.send_welcom_email_task = send_welcom_email_task
 
     def create_user(
         self,
@@ -68,6 +72,7 @@ class UserService:
         #     self.email_service.send_email, user.email
         # )
         SendWelcomeEmailTask().run(user.email)
+        self.send_welcom_email_task.delay(user.email)
         
         return user
     

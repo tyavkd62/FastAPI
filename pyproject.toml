@@ -23,6 +23,12 @@ python-dotenv = "^1.1.0"
 pydantic-settings = "^2.9.1"
 celery = "^5.5.2"
 requests = "^2.32.3"
+pytest = "^8.3.5"
+pytest-mock = "^3.14.0"
+freezegun = "^1.5.1"
+
+[tool.poetry.group.dev.dependencies]
+freezegun = "^1.5.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
